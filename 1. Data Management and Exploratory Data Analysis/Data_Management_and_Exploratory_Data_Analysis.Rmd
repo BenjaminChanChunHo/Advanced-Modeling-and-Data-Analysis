@@ -1,0 +1,255 @@
+---
+title: "| CUHK STAT5060\n| Advanced Modeling and Data Analysis \n"
+author: |
+  | Benjamin Chan
+  | November 19, 2018
+output: html_document
+subtitle: |
+  | Multilevel Analysis of School Examination Data
+  | Data Management and Exploratory Data Analysis
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = "")
+```
+
+### Install Packages
+```{r, warning = FALSE, message = FALSE}
+# Check if packages are installed. If not, install them.
+install.new.packages <- function(pkg) {
+    new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+    if (length(new.pkg)) {
+        install.packages(new.pkg)
+    }
+}
+
+packages <- c("dplyr", "ggplot2", "ggthemes")
+install.new.packages(packages)
+```
+
+### Load Packages
+```{r, warning = FALSE, message = FALSE}
+library(dplyr)                                    # A Grammar of Data Manipulation
+library(ggplot2)                                  # Data Visualisations Using the Grammar of Graphics
+library(ggthemes)                                 # Extra Themes, Scales and Geoms for 'ggplot2'
+```
+
+### Download Data
+```{r}
+Sys.time()
+
+new_folder <- "./Dataset"
+
+if (!file.exists(new_folder)) {
+    dir.create(new_folder)
+}
+
+zip.file.URL <- "http://www.bristol.ac.uk/cmm/media/migrated/datasets.zip"
+zip.file.name <- "./Dataset/datasets.zip"
+file.name <- "Exam.txt"
+
+if (!file.exists("./Dataset/Exam.txt")) {
+    download.file(zip.file.URL, zip.file.name)
+    unzip(zip.file.name, files = file.name, exdir = new_folder)
+}
+
+if (file.exists(zip.file.name)) {file.remove(zip.file.name)}
+```
+
+### Display Raw Data
+```{r}
+Exam <- read.table("./Dataset/Exam.txt")
+
+colnames(Exam) <- c("School.ID", "Student.ID", "Exam.Score", "Constant", "LR.Test.Score", "Student.Gender", 
+                    "School.Gender", "School.Intake.Score", "Student.VR.Score", "Student.Band")
+
+head(Exam)
+str(Exam)
+
+mean(Exam$Constant == 1)                          # All constants are 1
+```
+
+### Exploratory Data Analysis
+#### Univariate (Student Level)
+```{r}
+length(unique(Exam$School.ID))                    # Number of schools
+
+nrow(Exam)                                        # Number of students
+
+length(unique(Exam$Student.ID))                   # Student ID can be the same in different schools
+
+# Histogram of Exam Score (response)
+with(Exam, hist(Exam.Score, freq = F, main = "Student Level"))       
+temp1 <- with(Exam, seq(min(Exam.Score), max(Exam.Score), length = 1000))
+temp2 <- dnorm(temp1)
+lines(temp1, temp2, lwd = 1, col = "blue")        # Normal density
+
+# Histogram of London Reading Test (predictor)
+with(Exam, hist(LR.Test.Score, freq = F, main = "Student Level"))
+temp3 <- with(Exam, seq(min(Exam.Score), max(Exam.Score), length = 1000))
+temp4 <- dnorm(temp3)
+lines(temp3, temp4, lwd = 1, col = "blue")        # Normal density
+
+mean(Exam$Student.Gender)                         # Percentage of girl students
+
+table(Exam$School.Gender)                         # School Gender: 1 = mixed, 2 = boys, 3 = girls
+
+table(Exam$Student.VR.Score)                      # Student VR Score: 1 = bottom 25%, 2 = mid 50%, 3 = top 25%
+
+table(Exam$Student.Band)                          # Student Intake Band: 1 = bottom 25%, 2 = mid 50%, 3 = top 25%
+```
+
+#### Univariate (School Level)
+```{r}
+length(unique(Exam$School.Intake.Score))          # Unique average intake score for each school
+School.Intake.Avg <- Exam %>% select(School.ID, School.Intake.Score, Exam.Score) %>% 
+                              group_by(School.ID) %>% 
+                              summarize(Intake.Score = mean(School.Intake.Score),
+                                        Exam.Score = mean(Exam.Score)) %>%
+                              mutate(Intake.Score = round(Intake.Score, 3)) %>%
+                              mutate(Exam.Score = round(Exam.Score, 3))
+
+School.Intake.Avg <- as.data.frame(School.Intake.Avg)
+head(School.Intake.Avg)
+
+# School.ID vs Intake.Score; One circle for each school
+with(School.Intake.Avg, plot(School.ID, Intake.Score, main = "School Level"))
+
+# School.ID vs Intake.Score; One circle for each school
+with(School.Intake.Avg, plot(School.ID, Exam.Score, main = "School Level"))
+
+# Histogram of School Average Intake Score
+with(School.Intake.Avg, hist(Intake.Score, main = "School Level", freq = F, nclass = 8))
+temp5 <- with(School.Intake.Avg, seq(min(Intake.Score), max(Intake.Score), length = 1000))
+temp6 <- dnorm(temp5, mean(temp5), sd(temp5))
+lines(temp5, temp6, lwd = 1, col = "blue")        # Normal density
+
+# Histogram of School Average Exam Score
+with(School.Intake.Avg, hist(Exam.Score, main = "School Level", freq = F, nclass = 8))   
+temp7 <- with(School.Intake.Avg, seq(min(Exam.Score), max(Exam.Score), length = 1000))
+temp8 <- dnorm(temp7, mean(temp7), sd(temp7))
+lines(temp7, temp8, lwd = 1, col = "blue")        # Normal density                           
+```
+
+#### Bivariate
+```{r}
+c(length(unique(Exam$LR.Test.Score)),             # Number of unique LR.Test.Score
+  length(unique(Exam$Exam.Score)))                # Number of unique Exam.Score
+
+fit1 <- lm(Exam.Score~LR.Test.Score, data = Exam)
+slope1 <- as.numeric(signif(fit1$coefficients[2], 3))
+p_value1 <- as.numeric(summary(fit1)$coef[2, 4])
+
+ggplot(Exam, aes(x = LR.Test.Score, y = Exam.Score)) +
+       labs(title = paste("Student Level:", " Slope =", slope1, "with p-value =", p_value1)) +
+       theme(plot.title = element_text(hjust = 0.5)) +
+       geom_point(alpha = 0.3, color = "blue") +
+       theme_few() + 
+       geom_smooth(colour = "red", method = "lm", formula = y~x, se = F)
+
+fit2 <- lm(Exam.Score~Intake.Score, data = School.Intake.Avg)
+slope2 <- as.numeric(signif(fit2$coefficients[2], 3))
+p_value2 <- as.numeric(signif(summary(fit2)$coef[2,4], 3))
+
+ggplot(School.Intake.Avg, aes(x = Intake.Score, y = Exam.Score)) +
+       labs(title = paste("School Level:", " Slope =", slope2, "with p-value =", p_value2)) +
+       geom_point(color = "blue") +
+       theme_few() + 
+       geom_smooth(colour = "red", method = "lm", formula = y~x, se = F)
+
+Band.w.Score <- Exam %>% select(Exam.Score, Student.Band) %>% 
+                              group_by(Student.Band) %>% 
+                              summarize(Band.Mean.Score = mean(Exam.Score)) %>%
+                              mutate(Band.Mean.Score = round(Band.Mean.Score, 3))
+(Band.w.Score <- as.matrix(Band.w.Score))
+
+VR.w.Score <- Exam %>% select(Exam.Score, Student.VR.Score) %>% 
+                              group_by(Student.VR.Score) %>% 
+                              summarize(VR.Mean.Score = mean(Exam.Score)) %>%
+                              mutate(VR.Mean.Score = round(VR.Mean.Score, 3))
+(VR.w.Score <- as.matrix(VR.w.Score))
+```
+
+### Manipulate Data
+```{r}
+Exam_Tidy <- Exam                                 # Make a copy
+
+# Baseline: School.Gender = 1 (mixed school)
+Exam_Tidy$School.Boys <- (Exam_Tidy$School.Gender == 2)*1
+Exam_Tidy$School.Girls <- (Exam_Tidy$School.Gender == 3)*1
+
+# Baseline: Student.VR.Score = 1 (bottom 25%)
+Exam_Tidy$Student.VR.Mid <- (Exam_Tidy$Student.VR.Score == 2)*1
+Exam_Tidy$Student.VR.Top <- (Exam_Tidy$Student.VR.Score == 3)*1
+
+# Baseline: Student.Band = 1 (bottom 25%)
+Exam_Tidy$Student.Band.Mid <- (Exam_Tidy$Student.Band == 2)*1
+Exam_Tidy$Student.Band.Top <- (Exam_Tidy$Student.Band == 3)*1
+
+colnames(Exam_Tidy)
+
+Constant <- Exam_Tidy$Constant
+select_var <- !colnames(Exam_Tidy) %in% 
+               c("Student.ID", "Constant", "School.Gender", "Student.VR.Score", "Student.Band")
+
+Exam_Tidy <- cbind(Constant, Exam_Tidy[, select_var])
+
+# Make sure that Exam_Tidy is sorted in ascending order of School.ID
+Exam_Tidy <- Exam_Tidy[order(Exam_Tidy$School.ID),]
+head(Exam_Tidy)
+tail(Exam_Tidy)
+```
+
+### Extract Student and School Level Data
+```{r}
+(k <- length(unique(Exam_Tidy$School.ID)))        # Number of schools (clusters)
+nk <- rep(NA, k)                                  # Initialize no of observations in each cluster
+
+for(i in 1:k) {
+    nk[i] <- sum(Exam_Tidy$School.ID == i)
+}
+
+nk
+
+sum(nk)                                           # No of observations
+
+(cum.nk <- cumsum(nk))                            # Cumulative sums
+
+student_var <- c("Constant", "School.ID", "Exam.Score", "LR.Test.Score", "Student.Gender", 
+                 "Student.VR.Mid", "Student.VR.Top", "Student.Band.Mid", "Student.Band.Top")
+school_var <- c("School.ID", "School.Intake.Score", "School.Boys", "School.Girls")
+
+Exam_Student <- Exam_Tidy[, student_var]
+
+Exam_School <- Exam_Tidy[, school_var]
+Exam_School <- unique(Exam_School)                # Duplicate rows removed
+nrow(Exam_School)                                 # Number of unique rows
+
+Exam_School <- cbind(Constant = 1, Exam_School, nk = nk, cum.nk = cum.nk)
+```
+
+### Save CSV Files for Future Use
+```{r}
+# Student Level Data: Exam_Student.csv
+student_file <- "./Dataset/Exam_Student.csv"
+
+if (!file.exists(student_file)) {
+    write.csv(Exam_Student, file = student_file, row.names = F)
+}
+
+# School Level Data: Exam_School.csv
+school_file <- "./Dataset/Exam_School.csv"
+
+if (!file.exists(school_file)) {
+    write.csv(Exam_School, file = school_file, row.names = F)
+}
+
+# Full Data: Exam_Full.csv
+full_file <- "./Dataset/Exam_Full.csv"
+
+if (!file.exists(full_file)) {
+    write.csv(Exam_Tidy, file = full_file, row.names = F)
+}
+```
