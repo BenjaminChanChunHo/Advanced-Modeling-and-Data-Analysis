@@ -6,3 +6,5 @@
 5. [Full Model without Intercept, with Random LRT Effect](http://rpubs.com/Benjamin_Chan_Chun_Ho/Full_Model_5)
 6. [Submodel with Random and Fixed Intercept, without School Effect Predictor](http://rpubs.com/Benjamin_Chan_Chun_Ho/Full_Model_6)
 7. [Submodel with Random and Fixed Intercept, without Student Verbal Reasoning Band](http://rpubs.com/Benjamin_Chan_Chun_Ho/Full_Model_7)
+8. [Submodel with Random and Fixed Intercept, without Student VR and Intake Band](http://rpubs.com/Benjamin_Chan_Chun_Ho/Full_Model_8)
+9. [Submodel with Random and Fixed Intercept, without Student Gender and VR Band](http://rpubs.com/Benjamin_Chan_Chun_Ho/Full_Model_9)
