@@ -1,7 +1,9 @@
-## STAT5060 Advanced Modeling and Data Analysis
+# The Chinese University of Hong Kong (CUHK)
+## Department of Statistics
+### STAT5060 Advanced Modeling and Data Analysis
 This course covers recent developments in statistical modeling and data analysis. Topics may include generalized linear models (GLM), mixed effects models, hierarchical models, mixture models, generalized additive models, hidden Markov model, Bayesian network, and other advanced statistical models. Statistical analysis for different types of data, such as discrete data, non-normal continuous data, hierarchical/heterogeneous data, longitudinal data, and incomplete data, will be discussed.
 
-### 18-19 Term 1, Course Instructor: Prof. Xinyuan Song
+#### 18-19 Term 1, Course Instructor: Prof. Xinyuan Song
 #### Project Topic: Multilevel Analysis of School Examination Data by Benjamin Chan
 1. [Data Management and Exploratory Data Analysis](http://rpubs.com/Benjamin_Chan_Chun_Ho/STAT5060_Exploratory_Data_Analysis)
 2. Full Model (Using All Variables): </br>
