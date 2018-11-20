@@ -5,6 +5,7 @@ This course covers recent developments in statistical modeling and data analysis
 
 #### 18-19 Term 1, Course Instructor: Prof. Xinyuan Song
 #### Project Topic: Multilevel Analysis of School Examination Data by Benjamin Chan
+The dataset [EXAM](http://www.bristol.ac.uk/cmm/learning/mmsoftware/data-rev.html), downloaded from Centre for Multilevel Modelling at University of Bristol, consists of 4,059 students from 65 schools in Inner London. The objective is to investigate the relationship between the exam score and the student-level and/or school-level variables. [Presentation](https://github.com/BenjaminChanChunHo/Advanced-Modeling-and-Data-Analysis/blob/master/Presentation_Slide_Benjamin_Chan.pdf) is given on November 21, 2018.
 1. [Data Management and Exploratory Data Analysis](http://rpubs.com/Benjamin_Chan_Chun_Ho/STAT5060_Exploratory_Data_Analysis)
 2. Full Model (Using All Variables): </br>
 2.1. [Full Model with Random and Fixed Intercept](http://rpubs.com/Benjamin_Chan_Chun_Ho/STAT5060_Full_Model_2) </br>
