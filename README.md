@@ -21,3 +21,5 @@ The dataset [EXAM](http://www.bristol.ac.uk/cmm/learning/mmsoftware/data-rev.htm
 3.6. [Submodel with Random and Fixed Intercept, without Student VR Band, School Intake Score](http://rpubs.com/Benjamin_Chan_Chun_Ho/Full_Model_11) </br>
 3.7. [Submodel with Random Intercept, without School Effect Predictor](http://rpubs.com/Benjamin_Chan_Chun_Ho/Full_Model_12) </br>
 4. [Recommended Model with Random Intercept and without Student VR Band and School Effect Predictor](http://rpubs.com/Benjamin_Chan_Chun_Ho/Full_Model_13)
+
+Remark: How to [Knit Document](https://raw.githubusercontent.com/BenjaminChanChunHo/Advanced-Modeling-and-Data-Analysis/master/Knit%20Document.PNG)
