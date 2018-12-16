@@ -1,10 +1,10 @@
-# The Chinese University of Hong Kong (CUHK)
-## Department of Statistics
+# [The Chinese University of Hong Kong (CUHK)](http://www.cuhk.edu.hk/english/index.html)
+## [Department of Statistics](http://www.sta.cuhk.edu.hk/home.aspx)
 ### STAT5060 Advanced Modeling and Data Analysis
 This course covers recent developments in statistical modeling and data analysis. Topics may include generalized linear models (GLM), mixed effects models, hierarchical models, mixture models, generalized additive models, hidden Markov model, Bayesian network, and other advanced statistical models. Statistical analysis for different types of data, such as discrete data, non-normal continuous data, hierarchical/heterogeneous data, longitudinal data, and incomplete data, will be discussed.
 
 #### 18-19 Term 1, Course Instructor: Prof. Xinyuan Song
-#### Project Topic: Multilevel Analysis of School Examination Data by Benjamin Chan
+#### Project Topic: Multilevel Analysis of School Examination Data by [Benjamin Chan](www.linkedin.com/in/benjamin-chan-chun-ho)
 The dataset [EXAM](http://www.bristol.ac.uk/cmm/learning/mmsoftware/data-rev.html), downloaded from Centre for Multilevel Modelling at University of Bristol, consists of 4,059 students from 65 schools in Inner London. The objective is to investigate the relationship between the exam score and the student-level and/or school-level variables. [Presentation](https://github.com/BenjaminChanChunHo/Advanced-Modeling-and-Data-Analysis/blob/master/Presentation_Slide_Benjamin_Chan.pdf) is given on November 21, 2018. [Report](https://github.com/BenjaminChanChunHo/Advanced-Modeling-and-Data-Analysis/blob/master/Report_Benjamin_Chan.pdf) is submitted on November 27.
 1. [Data Management and Exploratory Data Analysis](http://rpubs.com/Benjamin_Chan_Chun_Ho/STAT5060_Exploratory_Data_Analysis)
 2. Full Model (Using All Variables): </br>
